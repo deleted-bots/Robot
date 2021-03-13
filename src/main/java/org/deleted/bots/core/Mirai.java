@@ -33,7 +33,7 @@ public class Mirai {
 
     public Long sendGroupMsg(Long targetId,String context) throws IOException {
         JSONObject jsonObject = MessageUtil.sendMessageAssemble(targetId,context);
-        JSONObject result =  client.postJsonObject(httpUrl+"/sendFriendMessage",jsonObject.toJSONString());
+        JSONObject result =  client.postJsonObject(httpUrl+"/sendGroupMessage",jsonObject.toJSONString());
         System.out.println(result);
         return 1L;
     }
