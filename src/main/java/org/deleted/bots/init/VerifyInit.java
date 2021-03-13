@@ -3,7 +3,7 @@ package org.deleted.bots.init;
 import com.alibaba.fastjson.JSONObject;
 import org.deleted.bots.annotation.Initialization;
 import org.deleted.bots.annotation.PostStart;
-import org.deleted.bots.until.OkHttpClientUtil;
+import org.deleted.bots.util.OkHttpClientUtil;
 
 /**
  * 初始系统中的session

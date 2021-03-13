@@ -6,7 +6,7 @@ import org.deleted.bots.entity.GroupMessageEvent;
 import org.deleted.bots.entity.MessageEvent;
 import org.deleted.bots.entity.PrivateMessageEvent;
 import org.deleted.bots.init.Context;
-import org.deleted.bots.until.MessageUtil;
+import org.deleted.bots.util.MessageUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
