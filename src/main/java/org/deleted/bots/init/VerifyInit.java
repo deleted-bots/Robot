@@ -2,6 +2,7 @@ package org.deleted.bots.init;
 
 import com.alibaba.fastjson.JSONObject;
 import org.deleted.bots.annotation.Initialization;
+import org.deleted.bots.annotation.PostStart;
 import org.deleted.bots.util.OkHttpClientUtil;
 
 /**
@@ -12,6 +13,7 @@ public class VerifyInit {
     //用于http请求
     private String httpUrl = "http://"+System.getProperty("ip");
 
+    @PostStart
     public void init() throws Exception {
         String authKey = System.getProperty("authKey");
         auth(authKey);
