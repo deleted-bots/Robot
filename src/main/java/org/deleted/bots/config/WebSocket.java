@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import org.deleted.bots.annotation.Configuration;
 import org.deleted.bots.annotation.Plug;
+import org.deleted.bots.annotation.PostStart;
 import org.deleted.bots.core.MessageEventHandle;
 import org.deleted.bots.until.OkHttpClientUtil;
 import org.java_websocket.client.WebSocketClient;
@@ -23,6 +24,9 @@ import java.util.Set;
 @Configuration
 public class WebSocket {
 
+    private WebSocketClient webSocketClient;
+
+    @PostStart
     public void init() {
         webSocketClient();
     }
@@ -32,22 +36,14 @@ public class WebSocket {
     //消息处理器
     private MessageEventHandle messageEventHandle = new MessageEventHandle();
 
+    private void dispatchEvent(){
+
+    }
+
     public WebSocketClient webSocketClient() {
         try {
-            //获取插件类用于消息事件的响应
-            Reflections reflections = new Reflections(System.getProperty("package"));
-            Set<Class<?>> classes =  reflections.getTypesAnnotatedWith(Plug.class);
-            //实例化所有的插件
-            List<Object> miraiPlugs = new ArrayList<>();
-            for(Class cls:classes){
-                if(Modifier.isAbstract(cls.getModifiers())){//需要排除抽象类
-                    continue;
-                }
-                Object obj =  cls.getDeclaredConstructor().newInstance();
-                miraiPlugs.add(obj);
-            }
             //开始进行WebSocket连接 监听Mirai的消息事件。
-            WebSocketClient webSocketClient = new WebSocketClient(new URI(websocketUrl+"/message?sessionKey="+System.getProperty("sessionKey")),new Draft_6455()) {
+            this.webSocketClient = new WebSocketClient(new URI(websocketUrl+"/message?sessionKey="+System.getProperty("sessionKey")),new Draft_6455()) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
                     System.out.println("[websocket] 连接成功");
@@ -58,9 +54,9 @@ public class WebSocket {
                     String type = (String) messageJson.get("type");
                     try {
                         if(type.equals("FriendMessage") || type.equals("TempMessage")){
-                            messageEventHandle.privateMessageHandle(messageJson,miraiPlugs);
+                            messageEventHandle.privateMessageHandle(messageJson);
                         }else if(type.equals("GroupMessage")){
-                            messageEventHandle.groupMessageHandle(messageJson,miraiPlugs);
+                            messageEventHandle.groupMessageHandle(messageJson);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

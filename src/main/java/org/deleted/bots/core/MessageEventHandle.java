@@ -1,11 +1,17 @@
 package org.deleted.bots.core;
 
 import com.alibaba.fastjson.JSONObject;
+import org.deleted.bots.annotation.QQMsgHandler;
 import org.deleted.bots.entity.GroupMessageEvent;
+import org.deleted.bots.entity.MessageEvent;
 import org.deleted.bots.entity.PrivateMessageEvent;
+import org.deleted.bots.init.Context;
 import org.deleted.bots.until.MessageUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -13,28 +19,36 @@ import java.util.List;
  */
 public class MessageEventHandle {
 
-    private Mirai mirai = new Mirai();
+    private <T extends MessageEvent> void  invokeMessage(String type, Object obj, T event){
+        for(Method method : obj.getClass().getDeclaredMethods()){
+            if(method.isAnnotationPresent(QQMsgHandler.class)){
+                String[] types = method.getAnnotation(QQMsgHandler.class).type();
+                if(Arrays.asList(types).contains(type)){
+                    try {
+                        obj.getClass()
+                                .getDeclaredMethod(method.getName(),event.getClass())
+                                .invoke(obj,event);
+                    } catch (Exception e) {
+                        //todo logger
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
 
-    public void groupMessageHandle(JSONObject message, List<Object> miraiPlugs) throws Exception {
+    public void groupMessageHandle(JSONObject message){
         GroupMessageEvent messageEvent = MessageUtil.GmessageEventAssemble(message);
-        Class cls = MiraiPlug.class;
-        boolean flag = true;
-        for(Object obj : miraiPlugs){
-            if(!flag) return;
-            Method method  = cls.getMethod("onGroupMessage",Mirai.class, GroupMessageEvent.class);
-            flag = (boolean) method.invoke(obj,mirai,messageEvent);
+        for(Object obj : Context.getInstance().getPlugins()){
+            invokeMessage("Group",obj,messageEvent);
         }
 
     }
 
-    public void privateMessageHandle(JSONObject message, List<Object> miraiPlugs) throws Exception {
+    public void privateMessageHandle(JSONObject message){
         PrivateMessageEvent messageEvent = MessageUtil.PmessageEventAssemble(message);
-        Class cls = MiraiPlug.class;
-        boolean flag = true;
-        for(Object obj : miraiPlugs){
-            if(!flag) return;
-            Method method  = cls.getMethod("onPrivateMessage",Mirai.class, PrivateMessageEvent.class);
-            flag = (boolean) method.invoke(obj,mirai,messageEvent);
+        for(Object obj : Context.getInstance().getPlugins()){
+            invokeMessage("Private",obj,messageEvent);
         }
     }
 

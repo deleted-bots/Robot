@@ -3,7 +3,7 @@ package org.deleted.bots.entity;
 import java.io.Serializable;
 import java.util.List;
 
-public class PrivateMessageEvent implements Serializable {
+public class PrivateMessageEvent extends MessageEvent implements Serializable {
 
     private String type;//消息类型
     private List<MessageChain> messageChain;//消息组合对象

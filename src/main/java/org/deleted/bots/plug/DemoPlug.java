@@ -1,48 +1,39 @@
 package org.deleted.bots.plug;
 
+import org.deleted.bots.annotation.Inject;
+import org.deleted.bots.annotation.QQMsgHandler;
 import org.deleted.bots.core.Mirai;
-import org.deleted.bots.core.MiraiPlug;
 import org.deleted.bots.entity.GroupMessageEvent;
 import org.deleted.bots.entity.PrivateMessageEvent;
 
-public class DemoPlug extends MiraiPlug {
+import static org.deleted.bots.core.MiraiPlug.MESSAGE_IGNORE;
+
+@QQMsgHandler
+public class DemoPlug {
 
     private boolean start = false;
-    @Override
-    public boolean onPrivateMessage(Mirai mirai, PrivateMessageEvent event) throws Exception{
+
+    @Inject
+    private Mirai mirai;
+
+    @QQMsgHandler(type = {"Private"})
+    public boolean onPrivateMessage(PrivateMessageEvent event) throws Exception{
         String message = event.getRawMessage();
-        if (message.equals("开始复读")){
-            start = true;
-            return MESSAGE_IGNORE;
-        }else if(message.equals("停止复读")){
-            start = false;
-            return MESSAGE_IGNORE;
-        }
-        if(start) {
-            mirai.sendPrivateMsg(event.getUserId(),event.getMessageChain());
-           // mirai.sendPrivateMsg(event.getUserId(),event.getRawMessage());
+        if (message.equals("ping")){
+            mirai.sendPrivateMsg(event.getUserId(),"pong");
         }
         return MESSAGE_IGNORE;
     }
 
-    @Override
-    public boolean onGroupMessage(Mirai mirai, GroupMessageEvent event) throws Exception {
+    @QQMsgHandler(type = {"Group"})
+    public boolean onGroupMessage(GroupMessageEvent event) throws Exception {
         String message = event.getRawMessage();
-        if (message.equals("开始复读")){
-            start = true;
-            return MESSAGE_IGNORE;
-        }else if(message.equals("停止复读")){
-            start = false;
-            return MESSAGE_IGNORE;
-        }
-        if(start) {
-            mirai.SendGroupMSg(event.getGroupId(),event.getMessageChain());
-            // mirai.sendPrivateMsg(event.getUserId(),event.getRawMessage());
+        if (message.equals("ping")){
+            mirai.sendGroupMsg(event.getGroupId(),"pong");
         }
         return MESSAGE_IGNORE;
     }
 
-    @Override
     public boolean onTempMessage(Mirai mirai, PrivateMessageEvent event) {
         return MESSAGE_IGNORE;
     }
