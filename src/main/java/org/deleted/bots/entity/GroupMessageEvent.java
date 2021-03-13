@@ -2,7 +2,7 @@ package org.deleted.bots.entity;
 
 import java.util.List;
 
-public class GroupMessageEvent {
+public class GroupMessageEvent extends MessageEvent{
     private String type;//消息类型
     private List<MessageChain> messageChain;//消息组合对象
     private String rawMessage;//文本化的消息对象
