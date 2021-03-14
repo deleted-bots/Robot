@@ -52,10 +52,12 @@ public class WebSocket {
                     JSONObject messageJson = JSON.parseObject(message);
                     String type = (String) messageJson.get("type");
                     try {
-                        if(type.equals("FriendMessage") || type.equals("TempMessage")){
+                        if(type.equals("FriendMessage") ){
                             messageEventHandle.privateMessageHandle(messageJson);
                         }else if(type.equals("GroupMessage")){
                             messageEventHandle.groupMessageHandle(messageJson);
+                        }else  if(type.equals("TempMessage")){
+                            messageEventHandle.tempMessageHandle(messageJson);
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

@@ -34,7 +34,12 @@ public class DemoPlug {
         return MESSAGE_IGNORE;
     }
 
-    public boolean onTempMessage(Mirai mirai, PrivateMessageEvent event) {
+    @QQMsgHandler(type = {"Temp"})
+    public boolean onTempMessage(GroupMessageEvent event)throws Exception {
+        String message = event.getRawMessage();
+        if (message.equals("ping")){
+            mirai.sendTempMsg(event.getUserId(),event.getGroupId(),"pong");
+        }
         return MESSAGE_IGNORE;
     }
 }
