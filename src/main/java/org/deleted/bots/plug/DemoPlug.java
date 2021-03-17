@@ -11,8 +11,6 @@ import static org.deleted.bots.core.MiraiPlug.MESSAGE_IGNORE;
 @QQMsgHandler
 public class DemoPlug {
 
-    private boolean start = false;
-
     @Inject
     private Mirai mirai;
 
