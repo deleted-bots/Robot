@@ -116,14 +116,14 @@ public class Mirai {
 
     /**
      * 请求 Mirai http api 的统一入口
-     * @param URL API 路径
+     * @param path API路径
      * @param jsonString  请求的报文
      * @return 请求后返回的结果集
      * @throws IOException
      */
-    public JSONObject requestMiraiAPI(String URL,String jsonString) throws IOException {
+    public JSONObject requestMiraiAPI(String path,String jsonString) throws IOException {
         logger.debug("[Mirai API request]"+jsonString);
-        JSONObject result =  client.postJsonObject(httpUrl+URL,jsonString);
+        JSONObject result =  client.postJsonObject(httpUrl+path,jsonString);
         logger.debug("[Mirai API response]"+result);
         return result;
     }
