@@ -58,5 +58,14 @@ public class MessageEventHandle {
         }
     }
 
+    public void tempMessageHandle(JSONObject message){
+        //临时会话使用的数据格式与群消息一直所以也使用GroupMessageEvent
+        GroupMessageEvent messageEvent = MessageUtil.GmessageEventAssemble(message);
+        for(Object obj : ctx.getPlugins()){
+            invokeMessage("Temp",obj,messageEvent);
+        }
+
+    }
+
 
 }

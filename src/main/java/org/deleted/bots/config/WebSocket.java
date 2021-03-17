@@ -47,17 +47,18 @@ public class WebSocket {
                 public void onOpen(ServerHandshake handshakedata) {
                     logger.info("[websocket] 连接成功");
                 }
-
                 @Override
                 public void onMessage(String message) {
                     JSONObject messageJson = JSON.parseObject(message);
                     String type = (String) messageJson.get("type");
                     logger.debug("[websocket] 收到消息=" + message);
                     try {
-                        if (type.equals("FriendMessage") || type.equals("TempMessage")) {
+                        if(type.equals("FriendMessage") ){
                             handler.privateMessageHandle(messageJson);
-                        } else if (type.equals("GroupMessage")) {
+                        }else if(type.equals("GroupMessage")){
                             handler.groupMessageHandle(messageJson);
+                        }else  if(type.equals("TempMessage")){
+                            handler.tempMessageHandle(messageJson);
                         }
                     } catch (Exception e) {
                         logger.error("handle message failed:",e);
