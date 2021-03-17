@@ -3,6 +3,8 @@ package org.deleted.bots.init;
 import org.deleted.bots.annotation.*;
 import org.reflections.Reflections;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Properties;
@@ -33,20 +35,22 @@ public class Init {
         }
     }
 
-    private static void injectDependencies(Context ctx, Object obj) {
+    private static void assertInjectClass(Class<?> cls) throws Exception {
+        if(cls.isAnnotationPresent(Internal.class)){
+            return;
+        }
+        for(Annotation annotation : cls.getAnnotations()){
+            if(annotation.annotationType().isAnnotationPresent(Internal.class)){
+                return;
+            }
+        }
+        throw new Exception(cls.getSimpleName() + " not process by init");
+    }
+
+    private static void injectDependencies(Context ctx, Object obj) throws Exception {
         for (Field field : obj.getClass().getDeclaredFields()) {
             if (field.isAnnotationPresent(Inject.class)) {
-                if (!field.getType().isAnnotationPresent(Initialization.class) && !field.getType().isAnnotationPresent(Configuration.class)) {
-                    logger.error(
-                            String.format(
-                                    "%s in %s.%s not processed by init",
-                                    field.getType().getSimpleName(),
-                                    obj.getClass().getSimpleName(),
-                                    field.getName()
-                            )
-
-                    );
-                }
+                assertInjectClass(field.getType());
                 boolean canAccess = field.isAccessible();
                 if (!canAccess) {
                     field.setAccessible(true);
@@ -87,6 +91,7 @@ public class Init {
         for (Class<?> cls : classes) {
             Object o = cls.getDeclaredConstructor().newInstance();//通过反射创建对象
             invokePostStart(o);
+            injectDependencies(ctx, o);
             ctx.put(cls.getSimpleName(), o);
         }
         classes = reflections.getTypesAnnotatedWith(QQMsgHandler.class);
@@ -97,5 +102,6 @@ public class Init {
             injectDependencies(ctx, o);
             ctx.putPlugin(cls.getSimpleName(), o);
         }
+        logger.info("init success");
     }
 }

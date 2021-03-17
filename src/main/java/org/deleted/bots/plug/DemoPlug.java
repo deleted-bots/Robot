@@ -1,5 +1,8 @@
 package org.deleted.bots.plug;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.deleted.bots.annotation.Inject;
 import org.deleted.bots.annotation.QQMsgHandler;
 import org.deleted.bots.core.Mirai;
@@ -10,6 +13,8 @@ import static org.deleted.bots.core.MiraiPlug.MESSAGE_IGNORE;
 
 @QQMsgHandler
 public class DemoPlug {
+
+    private static Logger logger = LogManager.getLogger(DemoPlug.class);
 
     @Inject
     private Mirai mirai;
@@ -35,9 +40,11 @@ public class DemoPlug {
     @QQMsgHandler(type = {"Temp"})
     public boolean onTempMessage(GroupMessageEvent event)throws Exception {
         String message = event.getRawMessage();
+        logger.info(JSONObject.toJSONString(event));
         if (message.equals("ping")){
             mirai.sendTempMsg(event.getUserId(),event.getGroupId(),"pong");
         }
+
         return MESSAGE_IGNORE;
     }
 }

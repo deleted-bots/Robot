@@ -1,11 +1,13 @@
 package org.deleted.bots.init;
 
+import org.deleted.bots.annotation.Internal;
 import org.deleted.bots.core.Mirai;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+@Internal
 public class Context{
     private Map<String,Object> map = new HashMap<>();
     private Map<String,Object> plugins = new HashMap<>();

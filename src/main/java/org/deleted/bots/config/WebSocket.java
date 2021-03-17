@@ -47,40 +47,41 @@ public class WebSocket {
                 public void onOpen(ServerHandshake handshakedata) {
                     logger.info("[websocket] 连接成功");
                 }
+
                 @Override
                 public void onMessage(String message) {
                     JSONObject messageJson = JSON.parseObject(message);
                     String type = (String) messageJson.get("type");
                     logger.debug("[websocket] 收到消息=" + message);
                     try {
-                        if(type.equals("FriendMessage") ){
+                        if (type.equals("FriendMessage")) {
                             handler.privateMessageHandle(messageJson);
-                        }else if(type.equals("GroupMessage")){
+                        } else if (type.equals("GroupMessage")) {
                             handler.groupMessageHandle(messageJson);
-                        }else  if(type.equals("TempMessage")){
+                        } else if (type.equals("TempMessage")) {
                             handler.tempMessageHandle(messageJson);
                         }
                     } catch (Exception e) {
-                        logger.error("handle message failed:",e);
+                        logger.error("handle message failed:", e);
                     }
 
                 }
 
                 @Override
                 public void onClose(int code, String reason, boolean remote) {
-                    logger.warn(String.format("[websocket] %s退出连接: [%s] %s",remote ? "api server" : "local",code,reason));
+                    logger.warn(String.format("[websocket] %s退出连接: [%s] %s", remote ? "api server" : "local", code, reason));
                 }
 
                 @Override
                 public void onError(Exception ex) {
-                    logger.error("[websocket] 连接错误:",ex);
+                    logger.error("[websocket] 连接错误:", ex);
                 }
 
             };
             webSocketClient.connect();
             return webSocketClient;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("open websocket failed:", e);
         }
         return null;
     }
