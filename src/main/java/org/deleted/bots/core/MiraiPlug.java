@@ -14,5 +14,5 @@ public abstract class MiraiPlug {
     public static boolean MESSAGE_BLOCK = false;
     public abstract  boolean onPrivateMessage(Mirai mirai, PrivateMessageEvent event) throws Exception;
     public abstract  boolean onGroupMessage(Mirai mirai, GroupMessageEvent event) throws Exception;
-    public abstract  boolean onTempMessage(Mirai mirai, PrivateMessageEvent event);
+    public abstract  boolean onTempMessage(Mirai mirai, GroupMessageEvent event)throws Exception;
 }

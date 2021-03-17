@@ -44,4 +44,18 @@ public class Mirai {
         System.out.println(result);
         return 1L;
     }
+
+    public Long sendTempMsg(Long qq,Long groupId,String context) throws IOException {
+        JSONObject jsonObject = MessageUtil.sendMessageAssemble(qq,groupId,context);
+        JSONObject result =  client.postJsonObject(httpUrl+"/sendTempMessage",jsonObject.toJSONString());
+        System.out.println(result);
+        return 1L;
+    }
+
+    public Long sendTempMsg(Long qq,Long groupId, List<MessageChain> messageChains) throws IOException {
+        JSONObject jsonObject = MessageUtil.sendMessageAssemble(qq,groupId,messageChains);
+        JSONObject result =  client.postJsonObject(httpUrl+"/sendTempMessage",jsonObject.toJSONString());
+        System.out.println(result);
+        return 1L;
+    }
 }

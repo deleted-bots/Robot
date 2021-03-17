@@ -58,12 +58,7 @@ public class MessageUtil {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("sessionKey",System.getProperty("sessionKey"));
         jsonObject.put("target",id);
-        JSONArray array = new JSONArray();
-        MessageChain messageChain = new MessageChain();
-        messageChain.setType("Plain");
-        messageChain.setText(context);
-        array.add(messageChain);
-        jsonObject.put("messageChain",array);
+        jsonObject.put("messageChain",textToMessageChain(context));
         return jsonObject;
     }
     public static JSONObject sendMessageAssemble(Long id,List<MessageChain> messageChains){
@@ -72,5 +67,53 @@ public class MessageUtil {
         jsonObject.put("target",id);
         jsonObject.put("messageChain",messageChains);
         return jsonObject;
+    }
+
+    /**
+     * 临时会话组织的消息格式
+     * 需要同时指定 qq号 和 群号
+     * @param qq  接受者的qq
+     * @param groupId  接受者所在群
+     * @param context 消息集合本文化
+     * @return
+     */
+    public static JSONObject sendMessageAssemble(Long qq,Long groupId,String context){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sessionKey",System.getProperty("sessionKey"));
+        jsonObject.put("qq",qq);
+        jsonObject.put("group",groupId);
+        jsonObject.put("messageChain",textToMessageChain(context));
+        return jsonObject;
+    }
+
+    /**
+     * 临时会话组织的消息格式
+     * 需要同时指定 qq号 和 群号
+     * @param qq  接受者的qq
+     * @param groupId  接受者所在群
+     * @param messageChains 完整的消息集合
+     * @return
+     */
+    public static JSONObject sendMessageAssemble(Long qq,Long groupId,List<MessageChain> messageChains){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sessionKey",System.getProperty("sessionKey"));
+        jsonObject.put("qq",qq);
+        jsonObject.put("group",groupId);
+        jsonObject.put("messageChain",messageChains);
+        return jsonObject;
+    }
+
+    /**
+     * 将文本封装成 textToMessageChain
+     * @param text 要封装的文本
+     * @return 已经转成 JSONArray的消息集合
+     */
+    public static JSONArray textToMessageChain(String text){
+        JSONArray array = new JSONArray();
+        MessageChain messageChain = new MessageChain();
+        messageChain.setType("Plain");
+        messageChain.setText(text);
+        array.add(messageChain);
+        return array;
     }
 }
