@@ -42,7 +42,7 @@ public class WebSocket {
     public WebSocketClient webSocketClient() {
         try {
             //开始进行WebSocket连接 监听Mirai的消息事件。
-            this.webSocketClient = new WebSocketClient(new URI(websocketUrl + "/message?sessionKey=" + System.getProperty("sessionKey")), new Draft_6455()) {
+            this.webSocketClient = new WebSocketClient(new URI(websocketUrl + "/all?sessionKey=" + System.getProperty("sessionKey")), new Draft_6455()) {
                 @Override
                 public void onOpen(ServerHandshake handshakedata) {
                     logger.info("[websocket] 连接成功");
