@@ -7,6 +7,7 @@ import org.deleted.bots.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MessageUtil {
 
@@ -100,6 +101,21 @@ public class MessageUtil {
         jsonObject.put("qq",qq);
         jsonObject.put("group",groupId);
         jsonObject.put("messageChain",messageChains);
+        return jsonObject;
+    }
+
+    /**
+     * 所有请求都需要带有sessionKey，但是感觉到处都有获取sessionKey的代码的不太好
+     * 所以这里提供一个统一的方法封装带有sessionKey的JSON对象
+     * @param body
+     * @return
+     */
+    public static JSONObject requestBodyAssemble(Map<String ,String> body){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("sessionKey",System.getProperty("sessionKey"));
+        for (String key : body.keySet()) {
+            jsonObject.put(key,body.get(key));
+        }
         return jsonObject;
     }
 

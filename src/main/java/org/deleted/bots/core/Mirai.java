@@ -9,7 +9,9 @@ import org.deleted.bots.util.MessageUtil;
 import org.deleted.bots.util.OkHttpClientUtil;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Initialization
@@ -106,10 +108,11 @@ public class Mirai {
      * @return
      * @throws IOException
      */
-    public Long recall(Long messageId) throws IOException {
-        JSONObject jsonObject = new JSONObject();
-        jsonObject.put("sessionKey",System.getProperty("sessionKey"));
-        jsonObject.put("target",messageId);
+    public Long recall(String messageId) throws IOException {
+        Map<String,String> body = new HashMap<String,String>();
+        body.put("target",messageId);
+        //通过此方法获取一个带有sessionKey的json对象
+        JSONObject jsonObject = MessageUtil.requestBodyAssemble(body);
         requestMiraiAPI("/recall",jsonObject.toJSONString());
         return 1L;
     }
