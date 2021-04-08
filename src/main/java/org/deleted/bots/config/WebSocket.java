@@ -7,12 +7,15 @@ import org.apache.logging.log4j.Logger;
 import org.deleted.bots.annotation.Configuration;
 import org.deleted.bots.annotation.Inject;
 import org.deleted.bots.annotation.PostStart;
+import org.deleted.bots.core.BotEventHandle;
 import org.deleted.bots.core.MessageEventHandle;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft_6455;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+
+import static org.deleted.bots.util.Type.*;
 
 /**
  * 与mirai机器人的WebSocket链接在这里初始化
@@ -26,6 +29,9 @@ public class WebSocket {
 
     @Inject
     MessageEventHandle handler;
+
+    @Inject
+    BotEventHandle eventHandler;
 
     @PostStart
     public void init() {
@@ -54,12 +60,14 @@ public class WebSocket {
                     String type = (String) messageJson.get("type");
                     logger.debug("[websocket] 收到消息=" + message);
                     try {
-                        if (type.equals("FriendMessage")) {
+                        if (type.equals(FRIEND_MESSAGE.getType())){
                             handler.privateMessageHandle(messageJson);
-                        } else if (type.equals("GroupMessage")) {
+                        } else if (type.equals(GROUP_MESSAGE.getType())) {
                             handler.groupMessageHandle(messageJson);
-                        } else if (type.equals("TempMessage")) {
+                        } else if (type.equals(TEMP_MESSAGE.getType())) {
                             handler.tempMessageHandle(messageJson);
+                        }else if (type.equals(MEMBER_LEAVE_EVENT_QUIT.getType())) {
+                            eventHandler.memberLeaveEventQuit(messageJson);
                         }
                     } catch (Exception e) {
                         logger.error("handle message failed:", e);
